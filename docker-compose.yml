@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  webserver:
+    image: nginx:latest
+    ports:
+      - "89:80"
+    volumes:
+      - ./web:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    container_name: privatetalk-web
+    depends_on:
+      - signaling
+    networks:
+      - privatetalk-network
+
+  signaling:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: privatetalk-signaling
+    networks:
+      - privatetalk-network
+
+networks:
+  privatetalk-network:
+    driver: bridge
+
